@@ -1,0 +1,75 @@
+import os
+import sys
+import json
+import socket
+import struct
+import configs
+import threading
+import subprocess
+from utils import parse_cmd
+
+
+header_buf_size = 4
+char_buf_size = 1
+
+
+def exec_conn(conn, addr, id):
+    conn.send(struct.pack('i', id))
+    while True:
+        # Receive command.
+        size = struct.unpack('i', conn.recv(header_buf_size))[0]
+        cmd = ""
+        while(len(cmd) < size):
+            cmd = cmd + conn.recv(char_buf_size).decode('utf-8')
+        print('[Log (ID: %d)] (1/3) Receive command' % id, cmd)
+        # Execute command and get result.
+        with open("netrelay_logs/res.dat", "wb") as fout, open("netrelay_logs/err_msg.dat", "wb") as ferr:
+            try:
+                _ = subprocess.call(parse_cmd(cmd), stdout=fout, stderr=ferr)
+            except Exception:
+                print('[Log] Unsupported command')
+                ferr.write("Unsupported command.\n".encode('utf-8'))
+                fout.write("".encode('utf-8'))
+        with open("netrelay_logs/res.dat", "rb") as fout:
+            res = fout.read()
+        with open("netrelay_logs/err_msg.dat", "rb") as ferr:
+            err = ferr.read()
+        print('[Log (ID: %d)] (2/3) Finish executing' % id)
+        # Send back result.
+        conn.send(struct.pack('i', len(res)))
+        conn.sendall(res)
+        conn.send(struct.pack('i', len(err)))
+        conn.sendall(err)
+        print('[Log (ID: %d)] (3/3) Finish data sending' % id)
+
+
+def exec_relay(src_addr):
+    if not os.path.exists('netrelay_logs'):
+        os.makedirs('netrelay_logs')
+    id_cnt = 0
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    s.bind(src_addr)
+    s.listen(5)
+
+    threads = []
+    while True:
+        conn, addr = s.accept()
+        id_cnt = id_cnt + 1
+        id = id_cnt
+        print('[Log] Receive connection request from ', addr, 'with ID', id)
+        t = threading.Thread(target=exec_conn, args=(conn, addr, id))
+        t.start()
+        threads.append(t)
+    
+    for t in threads:
+        t.join()
+    s.close()
+
+
+def main(argv):
+    exec_relay(configs.parse_argv_relay(argv))
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
