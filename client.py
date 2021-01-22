@@ -56,15 +56,15 @@ def exec_client(dst_addr, with_err=False):
             break
         # Execute the commands on remote
         res, err = exec_cmd(s, cmd)
-        print(res, end='')
+        print(res)
         if with_err:
             if len(err) != 0:
                 print('[stderr msg]')
-                print(err, end='')
+                print(err)
         else:
             if len(res) == 0 and len(err) != 0:
                 print('[stderr msg]')
-                print(err, end='')
+                print(err)
     close(s)
 
 
