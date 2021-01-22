@@ -15,24 +15,29 @@ char_buf_size = 1
 
 def exec_conn(conn, addr, id):
     conn.send(struct.pack('i', id))
+    print('[Log (ID: %d)] Login from' % id, addr)
     while True:
         # Receive command.
-        size = struct.unpack('i', conn.recv(header_buf_size))[0]
-        cmd = ""
+        try:
+            size = struct.unpack('i', conn.recv(header_buf_size))[0]
+        except Exception:
+            print('[Log (ID: %d)] Logout' % id)
+        cmd = "".encode('utf-8')
         while(len(cmd) < size):
-            cmd = cmd + conn.recv(char_buf_size).decode('utf-8')
+            cmd = cmd + conn.recv(char_buf_size)
+        cmd = cmd.decode('utf-8')
         print('[Log (ID: %d)] (1/3) Receive command' % id, cmd)
         # Execute command and get result.
-        with open("netrelay_logs/res.dat", "wb") as fout, open("netrelay_logs/err_msg.dat", "wb") as ferr:
+        with open("netrelay_logs/res" + str(id) + ".dat", "wb") as fout, open("netrelay_logs/errmsg" + str(id) + ".dat", "wb") as ferr:
             try:
                 _ = subprocess.call(parse_cmd(cmd), stdout=fout, stderr=ferr)
             except Exception:
                 print('[Log] Unsupported command')
                 ferr.write("Unsupported command.\n".encode('utf-8'))
                 fout.write("".encode('utf-8'))
-        with open("netrelay_logs/res.dat", "rb") as fout:
+        with open("netrelay_logs/res" + str(id) + ".dat", "rb") as fout:
             res = fout.read()
-        with open("netrelay_logs/err_msg.dat", "rb") as ferr:
+        with open("netrelay_logs/errmsg" + str(id) + ".dat", "rb") as ferr:
             err = ferr.read()
         print('[Log (ID: %d)] (2/3) Finish executing' % id)
         # Send back result.
@@ -57,7 +62,6 @@ def exec_relay(src_addr):
         conn, addr = s.accept()
         id_cnt = id_cnt + 1
         id = id_cnt
-        print('[Log] Receive connection request from ', addr, 'with ID', id)
         t = threading.Thread(target=exec_conn, args=(conn, addr, id))
         t.start()
         threads.append(t)
