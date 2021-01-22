@@ -12,7 +12,7 @@ char_buf_size = 1
 
 def start(dst_addr):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect_ex(dst_addr)
+    s.connect(dst_addr)
     id = struct.unpack('i', s.recv(header_buf_size))[0]
     print("Successfully connect to the server, your client ID is", id)
     return s, id

@@ -22,6 +22,7 @@ def exec_conn(conn, addr, id):
             size = struct.unpack('i', conn.recv(header_buf_size))[0]
         except Exception:
             print('[Log (ID: %d)] Logout' % id)
+            break
         cmd = "".encode('utf-8')
         while(len(cmd) < size):
             cmd = cmd + conn.recv(char_buf_size)
@@ -32,7 +33,7 @@ def exec_conn(conn, addr, id):
             try:
                 _ = subprocess.call(parse_cmd(cmd), stdout=fout, stderr=ferr)
             except Exception:
-                print('[Log] Unsupported command')
+                print('[Log (ID: %d)] Unsupported command' % id)
                 ferr.write("Unsupported command.\n".encode('utf-8'))
                 fout.write("".encode('utf-8'))
         with open("netrelay_logs/res" + str(id) + ".dat", "rb") as fout:
