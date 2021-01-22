@@ -18,7 +18,7 @@ python3 client.py --dst=<destinationAddr>
 **For API use**
 
 ```python
-import NetRelay.client as nr_client
+import netrelay.client as nr_client
 ```
 
 - Use `nr_client.start(<ipPortAddr>)` and `nr_client.close()` to start the connection to the relay server and close the connection to the relay server. `start` will return two values `s, id` representing the remote relay server `<server>` and the index of the current client on the remote relay server.
@@ -29,7 +29,7 @@ import NetRelay.client as nr_client
 Here is an example.
 
 ```python
-import NetRelay.client as nr_client
+import netrelay.client as nr_client
 s, id = nr_client.start(('127.0.0.1', 2333))
 res, err = nr_client.exec_cmd(s, 'curl -L www.linux.com')
 nr_client.exec_cmd_and_save(s, 'curl -L www.linux.com', 'linux.html')
