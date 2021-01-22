@@ -47,7 +47,7 @@ def close(s):
     s.close()
 
 
-def exec_client(dst_addr):
+def exec_client(dst_addr, with_err=False):
     s, _ = start(dst_addr)
     while True:
         # Read commands from input
@@ -57,14 +57,20 @@ def exec_client(dst_addr):
         # Execute the commands on remote
         res, err = exec_cmd(s, cmd)
         print(res, end='')
-        if len(err) != 0:
-            print('[stderr msg]')
-            print(err, end='')
+        if with_err:
+            if len(err) != 0:
+                print('[stderr msg]')
+                print(err, end='')
+        else:
+            if len(res) == 0 and len(err) != 0:
+                print('[stderr msg]')
+                print(err, end='')
     close(s)
 
 
 def main(argv):
-    exec_client(configs.parse_argv_client(argv))
+    dst_addr, err = configs.parse_argv_client(argv)
+    exec_client(dst_addr, err)
 
 
 if __name__ == '__main__':

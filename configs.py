@@ -29,11 +29,12 @@ def parse_argv_relay(argv):
 
 def parse_argv_client(argv):
     dst_addr_t = ""
+    err = False
     try:
-        opts, _ = getopt.getopt(argv, "hd:", ["help", "dst="])
+        opts, _ = getopt.getopt(argv, "hd:e", ["help", "dst=", "error"])
     except getopt.GetoptError:
-        print("client.py -d <destinationAddr> ")
-        print("(or)      --dst=<destinationAddr>")
+        print("client.py -d <destinationAddr>[ -e]")
+        print("(or)      --dst=<destinationAddr>[ --error]")
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
@@ -42,10 +43,12 @@ def parse_argv_client(argv):
             sys.exit()
         elif opt in ("-d", "--dst"):
             dst_addr_t = arg
+        elif opt in ("-e", "--error"):
+            err = True
     if parse_ipv4(dst_addr_t) is False:
         print("[Error] destinationAddr is invalid!")
         sys.exit(2)
     dst_ip, dst_port = dst_addr_t.split(':')
     dst_port = int(dst_port)
     dst_addr = (dst_ip, dst_port)
-    return dst_addr
+    return dst_addr, err

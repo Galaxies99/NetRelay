@@ -12,8 +12,10 @@ python3 relay.py --src=<sourceAddr>
 **For client terminal**
 
 ```bash
-python3 client.py --dst=<destinationAddr>
+python3 client.py --dst=<destinationAddr>[ --error]
 ```
+
+- `--error` will display `stderr` message on the screen.
 
 **For API use**
 
