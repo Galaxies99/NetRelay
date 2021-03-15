@@ -1,10 +1,31 @@
 def parse_cmd(cmd):
-    cmd_t = cmd.split(' ')
-    cmd_c = []
-    for item in cmd_t:
-        if item != "":
-            cmd_c.append(item)
-    return cmd_c
+    cmd_res = []
+    cmd_part = ""
+    s1 = False
+    s2 = False
+    prev = ''
+    for c in cmd:
+        if c == ' ' or c == '\t' or c == '\n':
+            if s1 or s2:
+                cmd_part = cmd_part + c
+            else:
+                if cmd_part != "":
+                    cmd_res.append(cmd_part)
+                    cmd_part = ""
+            continue
+        cmd_part = cmd_part + c
+        if c == "'":
+            if prev != '\\':
+                s1 = not s1
+        if c == '"':
+            if prev != '\\':
+                s2 = not s2
+        prev = c
+
+    if cmd_part != "":
+        cmd_res.append(cmd_part)
+    
+    return cmd_res
 
 
 def parse_ipv4(addr):

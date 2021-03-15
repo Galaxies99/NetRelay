@@ -3,6 +3,7 @@ import sys
 import json
 import socket
 import struct
+import getopt
 import configs
 import threading
 import subprocess
@@ -54,7 +55,10 @@ def exec_relay(src_addr):
         os.makedirs('netrelay_logs')
     id_cnt = 0
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    if ("win" in sys.platform) or (sys.platform == "msys"):
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    else:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(src_addr)
     s.listen(5)
 
