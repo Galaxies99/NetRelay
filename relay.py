@@ -4,10 +4,9 @@ import json
 import socket
 import struct
 import getopt
-import configs
 import threading
 import subprocess
-from utils import parse_cmd
+from utils import parse_cmd, parse_argv_relay
 
 
 header_buf_size = 4
@@ -74,7 +73,7 @@ def exec_relay(src_addr):
 
 
 def main(argv):
-    exec_relay(configs.parse_argv_relay(argv))
+    exec_relay(parse_argv_relay(argv))
 
 
 if __name__ == '__main__':

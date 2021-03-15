@@ -3,7 +3,7 @@ import sys
 import json
 import socket
 import struct
-import configs
+from utils import parse_argv_client
 
 
 header_buf_size = 4
@@ -69,7 +69,7 @@ def exec_client(dst_addr, with_err=False):
 
 
 def main(argv):
-    dst_addr, err = configs.parse_argv_client(argv)
+    dst_addr, err = parse_argv_client(argv)
     exec_client(dst_addr, err)
 
 
