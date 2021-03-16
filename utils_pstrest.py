@@ -1,5 +1,4 @@
 import pycurl
-import urllib
 from utils import parse_cmd
 
 def parse_curl(cmd):
@@ -15,11 +14,11 @@ def parse_curl(cmd):
         if omit_next:
             omit_next = False
             continue
-        if arg == '--header':
+        if arg == '--header' or arg == '-H':
             name.append(pycurl.HTTPHEADER)
             if i + 1 < len(cmd_list):
                 t = cmd_list[i + 1]
-                if (t[0] == '"' and t[-1] =='”') or (t[0] == "'" and t[-1] == "'"):
+                if (t[0] == '"' and t[-1] == '"') or (t[0] == "'" and t[-1] == "'"):
                     t = t[1:-1]
                 args.append(t)
             else:
@@ -43,12 +42,28 @@ def parse_curl(cmd):
             name.append(pycurl.POSTFIELDS)
             if i + 1 < len(cmd_list):
                 t = cmd_list[i + 1]
-                if (t[0] == '"' and t[-1] =='”') or (t[0] == "'" and t[-1] == "'"):
+                if (t[0] == '"' and t[-1] == '"') or (t[0] == "'" and t[-1] == "'"):
                     t = t[1:-1]
-                args.append(urllib.urlencode(t))
+                args.append(t)
             else:
-                args.append(urllib.urlencode(""))
+                args.append("")
+    name, args = header_combine(name, args)
     return name, args, cmd_type
+
+
+def header_combine(name, args):
+    res_name, res_args = [], []
+    header_args = []
+    for i in range(len(name)):
+        if name[i] == pycurl.HTTPHEADER:
+            header_args.append(args[i])
+        else:
+            res_name.append(name[i])
+            res_args.append(args[i])
+    if header_args != []:
+        res_name.append(pycurl.HTTPHEADER)
+        res_args.append(header_args)
+    return res_name, res_args
 
 
 def filter_data(res):
