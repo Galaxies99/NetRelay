@@ -13,16 +13,18 @@ from utils_pstrest import parse_curl
 header_buf_size = 4
 char_buf_size = 1
 
-MAX_CALL = 20
+MAX_CALL = 1
 max_call = MAX_CALL
 def callback(data):
     global max_call, call_buf
-    if max_call >= 0:
+    if max_call > 0:
         if max_call == MAX_CALL:
             call_buf = data
         else:
             call_buf = call_buf + data
         max_call -= 1
+    else:
+        return -1
 
 
 def exec_conn(conn, addr, id):
@@ -53,7 +55,10 @@ def exec_conn(conn, addr, id):
                 c.setopt(name[i], args[i])
             max_call = MAX_CALL
             c.setopt(pycurl.WRITEFUNCTION, callback)
-            c.perform()
+            try:
+                c.perform()
+            except pycurl.error:
+                pass
             c.close()
             res = call_buf.decode('utf-8')
         print('[Log (ID: %d)] (2/3) Finish executing' % id)
