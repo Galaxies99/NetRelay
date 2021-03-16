@@ -49,4 +49,30 @@ def parse_curl(cmd):
             else:
                 args.append(urllib.urlencode(""))
     return name, args, cmd_type
-        
+
+
+def filter_data(res):
+    pos = res.find('data: {')
+    if pos == -1:
+        return ""
+    res = res[pos:]
+    data = ""
+    prev = ""
+    first = True
+    cnt = 0
+    for c in res:
+        if cnt == 0 and not first:
+            break
+        data = data + c
+        if c == '{':
+            if first:
+                first = False
+            if prev != '\\':
+                cnt += 1
+        if c == '}':
+            if prev != '\\':
+                cnt -= 1
+        prev = c
+    if cnt != 0:
+        raise ValueError('Not a full data record!')
+    return data

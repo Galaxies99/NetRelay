@@ -13,18 +13,19 @@ from utils_pstrest import parse_curl
 header_buf_size = 4
 char_buf_size = 1
 
-
-first_call = True
-call_buf = ""
+MAX_CALL = 20
 def callback(data):
-    global first_call
-    if first_call:
-        call_buf = data
-        first_call = False
+    global max_call, call_buf
+    if max_call >= 0:
+        if max_call == MAX_CALL:
+            call_buf = data
+        else:
+            call_buf = call_buf + data
+        max_call -= 1
 
 
 def exec_conn(conn, addr, id):
-    global first_call
+    global max_call, call_buf
     conn.send(struct.pack('i', id))
     print('[Log (ID: %d)] Login from' % id, addr)
     while True:
@@ -50,12 +51,11 @@ def exec_conn(conn, addr, id):
             c = pycurl.Curl()
             for i in range(len(name)):
                 c.setopt(name[i], args[i])
-            first_call = True
+            max_call = MAX_CALL
             c.setopt(pycurl.WRITEFUNCTION, callback)
             c.perform()
             c.close()
-            res = call_buf.decode('iso-8859-1')
-        
+            res = call_buf.decode('utf-8')
         print('[Log (ID: %d)] (2/3) Finish executing' % id)
         # Send back result.
         res = res.encode('utf-8')
