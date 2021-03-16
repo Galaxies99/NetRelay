@@ -45,7 +45,6 @@ def exec_conn(conn, addr, id):
         res = ''
         err = ''
         name, args, cmd_type = parse_curl(cmd)
-        print(name, args)
         if cmd_type == -1 or len(name) != len(args):
             res = 'Not a supported curl command.'
         else:
