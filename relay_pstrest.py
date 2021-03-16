@@ -17,12 +17,14 @@ char_buf_size = 1
 first_call = True
 call_buf = ""
 def callback(data):
+    global first_call
     if first_call:
         call_buf = data
         first_call = False
 
 
 def exec_conn(conn, addr, id):
+    global first_call
     conn.send(struct.pack('i', id))
     print('[Log (ID: %d)] Login from' % id, addr)
     while True:
@@ -41,6 +43,7 @@ def exec_conn(conn, addr, id):
         res = ''
         err = ''
         name, args, cmd_type = parse_curl(cmd)
+        print(name, args)
         if cmd_type == -1 or len(name) != len(args):
             res = 'Not a supported curl command.'
         else:
@@ -51,10 +54,12 @@ def exec_conn(conn, addr, id):
             c.setopt(pycurl.WRITEFUNCTION, callback)
             c.perform()
             c.close()
-            res = call_buf.decode('utf-8')
+            res = call_buf.decode('iso-8859-1')
         
         print('[Log (ID: %d)] (2/3) Finish executing' % id)
         # Send back result.
+        res = res.encode('utf-8')
+        err = err.encode('utf-8')
         conn.send(struct.pack('i', len(res)))
         conn.sendall(res)
         conn.send(struct.pack('i', len(err)))
