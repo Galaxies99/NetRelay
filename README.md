@@ -38,6 +38,10 @@ nr_client.exec_cmd_and_save(s, 'curl -L www.linux.com', 'linux.html')
 nr_client.close()
 ```
 
+## Relay Tools for PST SDK
+
+See [PST SDK Documentation](http://files.ps-tech.com/pst/docs/5.0.1/SDK/rest.html) for details about the PST REST API.
+
 ## To-dos
 
 - [x] mini-shell client
