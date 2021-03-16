@@ -17,7 +17,8 @@ def parse_cmd(cmd):
                     cmd_res.append(cmd_part)
                     cmd_part = ""
             continue
-        cmd_part = cmd_part + c
+        if c != '\\' or (c == '\\' and prev == '\\'):
+            cmd_part = cmd_part + c
         if c == "'":
             if prev != '\\':
                 s1 = not s1
