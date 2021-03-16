@@ -40,9 +40,7 @@ nr_client.close()
 
 ## Relay Tools for PST SDK REST API
 
-See [PST SDK Documentation](http://files.ps-tech.com/pst/docs/5.0.1/SDK/rest.html) for details about the PST REST API.
-
-We modified the project to adapt to the PST REST API, and this tools enable users to call the PST REST API on a Windows PST-installed computer from a remote computer (for example, a Linux client which does not have PST support). Since the PST REST API includes streaming output, we use `pycurl` to re-implement the relay server. The client remains the same.
+We modified the project to adapt to the PST REST API, and this tools enable users to call the PST REST API on a Windows PST-installed computer from a remote computer (for example, a Linux client which does not have PST support). See [PST SDK Documentation](http://files.ps-tech.com/pst/docs/5.0.1/SDK/rest.html) for details about the PST REST API. Since the PST REST API includes streaming output, we use `pycurl` to re-implement the relay server. The client remains the same.
 
 **For relay terminal**
 
