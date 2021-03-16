@@ -14,6 +14,7 @@ header_buf_size = 4
 char_buf_size = 1
 
 MAX_CALL = 20
+max_call = MAX_CALL
 def callback(data):
     global max_call, call_buf
     if max_call >= 0:
