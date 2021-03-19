@@ -66,10 +66,10 @@ def header_combine(name, args):
     return res_name, res_args
 
 
-def filter_data(res):
+def postprocessing_data(res):
     pos = res.find('data: {')
     if pos == -1:
-        return ""
+        raise ValueError('Not a data record!')
     res = res[pos:]
     data = ""
     prev = ""

@@ -1,4 +1,4 @@
-from utils_pstrest import filter_data
+from utils_pstrest import postprocessing_data
 
 origin = "data: {\
   \"TrackerData\": {\
@@ -41,4 +41,4 @@ origin = "data: {\
 \
 ..abd."
 
-print(filter_data(origin))
+print(postprocessing_data(origin))
