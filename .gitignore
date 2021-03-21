@@ -1,6 +1,7 @@
 # Special
 .DS_Store
 netrelay_logs/
+result/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

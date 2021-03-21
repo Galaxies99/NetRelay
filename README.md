@@ -48,6 +48,14 @@ We modified the project to adapt to the PST REST API, and this tools enable user
 python3 relay_pstrest.py --src=<sourceAddr>
 ```
 
+**For client terminal**
+
+```bash
+python3 client.py --dst=<destinationAddr>[ --error]
+```
+
+You will be asked to input the filename that stores the result. Since this tool is designed for PST SDK REST API, the result will be saved in `result` directory with a `.json` format.
+
 **Note**. This tool only supports PST REST API currently, but may not support other `curl`-based APIs.
 
 ## To-dos

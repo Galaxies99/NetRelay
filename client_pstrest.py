@@ -35,7 +35,7 @@ def exec_cmd(s, cmd):
 
 
 def exec_cmd_and_save(s, cmd, res_dir, err_dir=None, display=False):
-    res, err = exec_cmd(s, cmd)    
+    res, err = exec_cmd(s, cmd)
     if display:
         print(res)
     with open(res_dir, "w") as fres:
@@ -49,7 +49,7 @@ def close(s):
     s.close()
 
 
-def exec_client(dst_addr, with_err=False):
+def exec_client(dst_addr, filename, with_err=False):
     s, _ = start(dst_addr)
     while True:
         # Read commands from input
@@ -57,22 +57,14 @@ def exec_client(dst_addr, with_err=False):
         if cmd == "exit":
             break
         # Execute the commands on remote
-        res, err = exec_cmd(s, cmd)
-        print(res)
-        if with_err:
-            if len(err) != 0:
-                print('[stderr msg]')
-                print(err)
-        else:
-            if len(res) == 0 and len(err) != 0:
-                print('[stderr msg]')
-                print(err)
+        exec_cmd_and_save(s, cmd, 'result/{}.json'.format(filename), display=True)
     close(s)
 
 
 def main(argv):
     dst_addr, err = parse_argv_client(argv)
-    exec_client(dst_addr, err)
+    filename = input('Please input filename (.json format): ')
+    exec_client(dst_addr, filename, err)
 
 
 if __name__ == '__main__':
