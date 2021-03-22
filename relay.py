@@ -6,7 +6,7 @@ import struct
 import getopt
 import threading
 import subprocess
-from utils import parse_cmd, parse_argv_relay
+from .utils import parse_cmd, parse_argv_relay
 
 
 header_buf_size = 4

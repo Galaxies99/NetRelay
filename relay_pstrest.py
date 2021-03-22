@@ -7,8 +7,8 @@ import getopt
 import pycurl
 import threading
 import subprocess
-from utils import parse_argv_relay
-from utils_pstrest import parse_curl
+from .utils import parse_argv_relay
+from .utils_pstrest import parse_curl
 
 header_buf_size = 4
 char_buf_size = 1

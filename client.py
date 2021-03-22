@@ -3,7 +3,7 @@ import sys
 import json
 import socket
 import struct
-from utils import parse_argv_client
+from .utils import parse_argv_client
 
 
 header_buf_size = 4
