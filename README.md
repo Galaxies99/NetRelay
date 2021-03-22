@@ -51,7 +51,7 @@ python3 relay_pstrest.py --src=<sourceAddr>
 **For client terminal**
 
 ```bash
-python3 client.py --dst=<destinationAddr>[ --error]
+python3 client_pstrest.py --dst=<destinationAddr>[ --error]
 ```
 
 You will be asked to input the filename that stores the result. Since this tool is designed for PST SDK REST API, the result will be saved in `result` directory with a `.json` format.
