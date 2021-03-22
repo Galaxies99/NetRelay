@@ -57,15 +57,15 @@ def exec_client(dst_addr, filename, with_err=False):
         if cmd == "exit":
             break
         # Execute the commands on remote
-        exec_cmd_and_save(s, cmd, 'result/{}.json'.format(filename), display=True)
+        exec_cmd_and_save(s, cmd, 'results/{}.json'.format(filename), display=True)
     close(s)
 
 
-def main(argv):
+def main(argv, filename):
     dst_addr, err = parse_argv_client(argv)
-    filename = input('Please input filename (.json format): ')
     exec_client(dst_addr, filename, err)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    filename = input('Please input filename (.json format): ')
+    main(sys.argv[1:], filename)
